@@ -11,6 +11,10 @@ const options = [
   { value: 'grape', label: 'Grape' },
 ];
 
+const radius = 100;
+const xCorrection = -20;
+const yCorrection = -15;
+
 function App() {
   const handleCircularSelectChange = (option: IOption) => {
     console.log("Selected option:", option);
@@ -24,6 +28,16 @@ function App() {
           options={options}
           defaultOption={options[0]}
           onChange={handleCircularSelectChange}
+          circleOptionsStyles={{
+            radius,
+            xCorrection,
+            yCorrection,
+          }}
+          wrapperStyles={{}}
+          mainButtonStyles={{}}
+          optionsStyles={{}}
+          optionStyles={{}}
+
         />
       </header>
     </div>

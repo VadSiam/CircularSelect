@@ -2,24 +2,48 @@ import React, { useState, useEffect, useRef } from 'react';
 import './styles.css';
 
 export interface IOption {
-  value: string 
+  value: string
   label: string
 }
 
-interface CircularSelectProps {
+export interface ICircleOptionsStyles {
+  radius: number;
+  xCorrection: number;
+  yCorrection: number;
+}
+
+const defaultCircleOptionsStyles: ICircleOptionsStyles = {
+  radius: 100,
+  xCorrection: -20,
+  yCorrection: -15,
+};
+
+export type CSSProperties = {
+  [key: string]: string | number | CSSProperties;
+};
+
+export interface CircularSelectProps {
   options: IOption[]
   defaultOption: IOption
   onChange: (option: IOption) => void
+  circleOptionsStyles?: ICircleOptionsStyles
+  wrapperStyles?: CSSProperties
+  mainButtonStyles?: CSSProperties
+  optionsStyles?: CSSProperties
+  optionStyles?: CSSProperties
 }
 
-const CircularSelect = ({ 
-  options, 
+const CircularSelect = ({
+  options,
   defaultOption,
-  onChange, 
+  onChange,
+  circleOptionsStyles = defaultCircleOptionsStyles,
+  wrapperStyles,
+  mainButtonStyles,
+  optionsStyles,
+  optionStyles,
 }: CircularSelectProps) => {
-  const radius = 100;
-  const xCorrection = -20;
-  const yCorrection = -15;
+  const { radius, xCorrection, yCorrection } = circleOptionsStyles;
   const [selectedOption, setSelectedOption] = useState<IOption>(defaultOption);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const circularSelectRef = useRef<HTMLDivElement>(null);
@@ -51,12 +75,23 @@ const CircularSelect = ({
   };
 
   return (
-    <div className="circular-select" ref={circularSelectRef}>
-      <button className="circular-button" onClick={toggleExpand}>
+    <div
+      style={wrapperStyles}
+      className="circular-select-wrapper"
+      ref={circularSelectRef}
+    >
+      <button
+        className="circular-button"
+        onClick={toggleExpand}
+        style={mainButtonStyles}
+      >
         {selectedOption.label}
       </button>
       {isExpanded && (
-        <div className="circle-options">
+        <div
+          className="circle-options"
+          style={optionsStyles}
+        >
           {options.map((option: IOption, index: number) => {
             const angle = (index * 360 * Math.PI) / (180 * options.length);
             const x = xCorrection + radius * Math.cos(angle);
@@ -66,7 +101,7 @@ const CircularSelect = ({
               <button
                 key={option.value}
                 className="circular-option"
-                style={{ left: x, top: y }}
+                style={{ left: x, top: y , ...optionStyles}}
                 onClick={() => handleOptionSelect(option)}
               >
                 {option.label}
